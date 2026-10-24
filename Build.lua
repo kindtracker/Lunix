@@ -218,7 +218,7 @@ local CXXFlags = CFlags .. " -fno-rtti -fno-exceptions"
 
 local ASFlags = "-g -mcpu=arm946e-s " .. Arch
 
-local LdFlags = "-TArm9.ld -nostartfiles -g " .. Arch .. " -Wl,-Map," .. Quote(Target .. ".map")
+local LdFlags = "-TArm9.ld -nostartfiles -g " .. Arch
 
 local Libs = ""
 local LibDirs = {}
