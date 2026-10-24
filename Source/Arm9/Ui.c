@@ -2,11 +2,6 @@
 #include "Arm9/Common.h"
 #include "Font/Font.h"
 
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <string.h>
-
 #define STRBUF_SIZE 512
 
 void DrawPixel(uint8_t *Screen, int X, int Y, int Color) {
