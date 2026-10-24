@@ -114,12 +114,15 @@ uint8_t I2cReadRegister(uint8_t DevId, uint8_t Register) {
     if (I2cSelectDevice(BusId, DeviceRegisterAddr) &&
         I2cSelectRegister(BusId, Register) &&
         I2cSelectDevice(BusId, DeviceRegisterAddr | 1)) {
+
       I2cWaitBusy(BusId);
-      uint8_t Data = I2cGetData(BusId);
       I2cStop(BusId, 1);
-      return Data;
+      I2cWaitBusy(BusId);
+
+      return I2cGetData(BusId);
     }
 
+    I2cWaitBusy(BusId);
     *I2cGetCntRegister(BusId) = 0xC5;
     I2cWaitBusy(BusId);
   }

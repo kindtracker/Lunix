@@ -23,7 +23,7 @@ void Main(int argc, char **argv) {
   Puts(&Console, "Lunix v0.1.0\n");
   while (true) {
     ConsoleDraw(&Console);
-    if (!(McuGetShellState() & 2)) {
+    if (!McuGetShellState()) {
       break;
     }
   }
