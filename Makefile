@@ -16,7 +16,7 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing header files
 # SPECS is the directory containing the important build and link files
 #---------------------------------------------------------------------------------
-export TARGET	:=	lunix3ds
+export TARGET	:=	Lunix
 BUILD		:=	build
 SOURCES		:=	source source/common source/fs source/crypto source/fatfs source/nand source/safety source/utils source/kernel
 DATA		:=	data
@@ -73,7 +73,6 @@ ifneq ($(BUILD),$(notdir $(CURDIR)))
 
 export OUTPUT_D	:=	$(CURDIR)/output
 export OUTPUT	:=	$(OUTPUT_D)/$(TARGET)
-export RELEASE	:=	$(CURDIR)/release
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir))
@@ -108,7 +107,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: common clean all gateway firm 2xrsa binary cakehax cakerop brahma release
+.PHONY: common clean all firm binary
 
 #---------------------------------------------------------------------------------
 all: firm
@@ -126,66 +125,10 @@ binary: common
 firm: binary
 	@firmtool build $(OUTPUT).firm -n 0x23F00000 -e 0 -D $(OUTPUT).bin -A 0x23F00000 -C NDMA -i
 
-gateway: binary
-	@cp resources/LauncherTemplate.dat $(OUTPUT_D)/Launcher.dat
-	@dd if=$(OUTPUT).bin of=$(OUTPUT_D)/Launcher.dat bs=1497296 seek=1 conv=notrunc
-
-2xrsa: binary
-	@make --no-print-directory -C 2xrsa
-	@mv $(OUTPUT).bin $(OUTPUT_D)/arm9.bin
-	@mv $(CURDIR)/2xrsa/bin/arm11.bin $(OUTPUT_D)/arm11.bin
-
-cakehax: submodules binary
-	@make dir_out=$(OUTPUT_D) name=$(TARGET).dat -C CakeHax bigpayload
-	@dd if=$(OUTPUT).bin of=$(OUTPUT).dat bs=512 seek=160
-
-cakerop: cakehax
-	@make DATNAME=$(TARGET).dat DISPNAME=$(TARGET) GRAPHICS=../resources/CakesROP -C CakesROP
-	@mv CakesROP/CakesROP.nds $(OUTPUT_D)/$(TARGET).nds
-
-brahma: submodules binary
-	@[ -d BrahmaLoader/data ] || mkdir -p BrahmaLoader/data
-	@cp $(OUTPUT).bin BrahmaLoader/data/payload.bin
-	@cp resources/BrahmaAppInfo BrahmaLoader/resources/AppInfo
-	@cp resources/BrahmaIcon.png BrahmaLoader/resources/icon.png
-	@make --no-print-directory -C BrahmaLoader APP_TITLE=$(TARGET)
-	@mv BrahmaLoader/output/*.3dsx $(OUTPUT_D)
-	@mv BrahmaLoader/output/*.smdh $(OUTPUT_D)
-
-release:
-	@rm -fr $(BUILD) $(OUTPUT_D) $(RELEASE)
-	@make --no-print-directory binary
-	@-make --no-print-directory gateway
-	@-make --no-print-directory firm
-	@-make --no-print-directory 2xrsa
-	@-make --no-print-directory cakerop
-	@-make --no-print-directory brahma
-	@[ -d $(RELEASE) ] || mkdir -p $(RELEASE)
-	@[ -d $(RELEASE)/$(TARGET) ] || mkdir -p $(RELEASE)/$(TARGET)
-	@cp $(OUTPUT).bin $(RELEASE)
-	@-cp $(OUTPUT).firm $(RELEASE)
-	@-cp $(OUTPUT_D)/arm9.bin $(RELEASE)
-	@-cp $(OUTPUT_D)/arm11.bin $(RELEASE)
-	@-cp $(OUTPUT).dat $(RELEASE)
-	@-cp $(OUTPUT).nds $(RELEASE)
-	@-cp $(OUTPUT).3dsx $(RELEASE)/$(TARGET)
-	@-cp $(OUTPUT).smdh $(RELEASE)/$(TARGET)
-	@-cp $(OUTPUT_D)/Launcher.dat $(RELEASE)
-	@cp $(CURDIR)/README.md $(RELEASE)
-	@-7z a $(RELEASE)/$(TARGET)-`date +'%Y%m%d-%H%M%S'`.zip $(RELEASE)/*
-
 #---------------------------------------------------------------------------------
 clean:
-	@echo clean CakeHax...
-	@-make clean --no-print-directory -C CakeHax
-	@echo clean CakesROP...
-	@-make clean --no-print-directory -C CakesROP
-	@echo clean BrahmaLoader...
-	@-make clean --no-print-directory -C BrahmaLoader
-	@echo clean 2xrsa...
-	@-make clean --no-print-directory -C 2xrsa
-	@echo clean lunix3ds...
-	@rm -fr $(BUILD) $(OUTPUT_D) $(RELEASE)
+	@echo clean Lunix...
+	@rm -fr $(BUILD) $(OUTPUT_D)
 
 
 #---------------------------------------------------------------------------------
