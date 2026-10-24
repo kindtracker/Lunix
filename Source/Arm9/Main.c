@@ -23,15 +23,15 @@ void Main(int argc, char **argv) {
   Puts(&Terminal, "Lunix v0.0.1\n");
   ShellPrompt(&Terminal);
 
-  int Frames = 0;
+  int FrameCount = 0;
   while (true) {
     if (!McuGetShellState()) {
       break;
     }
 
-    TerminalDraw(&Terminal);
+    TerminalDraw(&Terminal, FrameCount);
 
-    Frames++;
+    FrameCount++;
   }
 
   fs_deinit();

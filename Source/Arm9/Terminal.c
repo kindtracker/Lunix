@@ -13,7 +13,7 @@ void Puts(TerminalType *Terminal, const char *String) {
   }
 }
 
-void TerminalDraw(TerminalType *Terminal) {
+void TerminalDraw(TerminalType *Terminal, int FrameCount) {
   int X = 6;
   int Y = 6;
 
@@ -28,4 +28,8 @@ void TerminalDraw(TerminalType *Terminal) {
                   COLOR_STD_BG);
     X += 8;
   }
+
+  int Color = FrameCount % 1024 > 512 ? COLOR_WHITE : COLOR_STD_BG;
+  X += 8;
+  DrawRectangle(Terminal->Screen, X, Y, 8, 8, Color);
 }
