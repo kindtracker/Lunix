@@ -1,5 +1,4 @@
-#include "cache.h"
-#include "i2c.h"
+#pragma once
 
 void SystemReboot();
 void SystemPoweroff();
