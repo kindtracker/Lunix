@@ -1,9 +1,8 @@
 #include "Arm9/Common.h"
 #include "Common/Ui.h"
-#include "Drivers/System.h"
-#include "FatFs/qff.h"
-
 #include "Console.h"
+#include "Drivers/Mcu.h"
+#include "FatFs/qff.h"
 
 uint8_t *TopScreen, *BottomScreen;
 
@@ -24,7 +23,7 @@ void Main(int argc, char **argv) {
   Puts(&Console, "Lunix v0.1.0\n");
   while (true) {
     ConsoleDraw(&Console);
-    if (!(GetShellState() & 2)) {
+    if (!(McuGetShellState() & 2)) {
       break;
     }
   }
