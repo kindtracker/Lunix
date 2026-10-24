@@ -12,7 +12,7 @@ static uint8_t McuBinaryToBcd(uint8_t Value) {
 
 void SystemReboot() {
   I2cWriteRegister(I2C_DEV_MCU, MCU_REG_LCD_CONTROL, 1 << 0);
-  flushEntireDCache();
+  FlushEntireDCache();
   I2cWriteRegister(I2C_DEV_MCU, MCU_REG_POWER_CONTROL, 1 << 2);
 
   while (true) {
@@ -21,7 +21,7 @@ void SystemReboot() {
 
 void SystemPoweroff() {
   I2cWriteRegister(I2C_DEV_MCU, MCU_REG_LCD_CONTROL, 1 << 0);
-  flushEntireDCache();
+  FlushEntireDCache();
   I2cWriteRegister(I2C_DEV_MCU, MCU_REG_POWER_CONTROL, 1 << 0);
 
   while (true) {

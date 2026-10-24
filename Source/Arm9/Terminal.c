@@ -1,5 +1,5 @@
 #include "Arm9/Common.h"
-#include "Common/Ui.h"
+#include "Arm9/Ui.h"
 
 #include "Terminal.h"
 
@@ -24,12 +24,12 @@ void TerminalDraw(TerminalType *Terminal, int FrameCount) {
       Y += 8;
       continue;
     }
-    DrawCharacter(Terminal->Screen, Character, X, Y, COLOR_STD_FONT,
-                  COLOR_STD_BG);
+    DrawCharacter(Terminal->Screen, Character, X, Y, COLOR_WHITE, COLOR_BLACK,
+                  8);
     X += 8;
   }
 
-  int Color = FrameCount % 1024 > 512 ? COLOR_WHITE : COLOR_STD_BG;
+  int Color = FrameCount % 1024 > 512 ? COLOR_WHITE : COLOR_BLACK;
   X += 8;
   DrawRectangle(Terminal->Screen, X, Y, 8, 8, Color);
 }

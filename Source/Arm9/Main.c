@@ -1,7 +1,6 @@
 #include "Arm9/Common.h"
-#include "Common/Ui.h"
+#include "Arm9/Ui.h"
 #include "Drivers/Mcu.h"
-#include "FatFs/qff.h"
 #include "Shell/Shell.h"
 #include "Terminal.h"
 
@@ -17,7 +16,7 @@ void Main(int argc, char **argv) {
     BottomScreen = (uint8_t *)(*(uint32_t *)0x23FFFE08);
   }
 
-  ClearScreenF(true, true, COLOR_STD_BG);
+  ClearAllScreen();
 
   TerminalType Terminal = {"", 0, TopScreen};
   Puts(&Terminal, "Lunix v0.0.1\n");
@@ -34,7 +33,6 @@ void Main(int argc, char **argv) {
     FrameCount++;
   }
 
-  fs_deinit();
-  ClearScreenF(true, true, COLOR_STD_BG);
+  ClearAllScreen();
   SystemPoweroff();
 }
