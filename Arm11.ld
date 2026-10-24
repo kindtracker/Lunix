@@ -31,7 +31,7 @@ SECTIONS
         . = ALIGN(4);
     } > AXI_WRAM
 
-    _stack11_top = ORIGIN(AXI_WRAM) + LENGTH(AXI_WRAM);
+    _Stack11Top = ORIGIN(AXI_WRAM) + LENGTH(AXI_WRAM);
 
     /DISCARD/ :
     {

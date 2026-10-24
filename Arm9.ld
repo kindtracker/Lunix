@@ -28,14 +28,14 @@ SECTIONS
     .bss (NOLOAD) :
     {
         . = ALIGN(4);
-        _bss_start = .;
+        BssStart = .;
         *(.bss*)
         *(COMMON)
         . = ALIGN(4);
-        _bss_end = .;
+        BssEnd = .;
     } > ARM9_IMEM
 
-    _stack_top = ORIGIN(ARM9_IMEM) + LENGTH(ARM9_IMEM);
+    _Stack9Top = ORIGIN(ARM9_IMEM) + LENGTH(ARM9_IMEM);
 
     /DISCARD/ :
     {

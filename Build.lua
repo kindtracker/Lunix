@@ -4,7 +4,7 @@ local OutputFolder = "Output"
 local IncludeFolder = "Include"
 
 local Python = os.getenv("PYTHON") or "python3"
-local Prefix = os.getenv("CROSS_COMPILE") or "arm-none-eabi-"
+local Prefix = os.getenv("CROSSCOMPILE") or "arm-none-eabi-"
 
 local CC = Prefix .. "gcc"
 local AS = Prefix .. "gcc"
@@ -19,7 +19,8 @@ local Arm9CFlags = Arm9Arch
 	.. " -Wall -Wextra -g -O2 -I"
 	.. IncludeFolder
 local Arm9AsFlags = Arm9Arch .. " -mthumb-interwork"
-local Arm9LdFlags = "-T Arm9.ld -nostdlib -nostartfiles -Wl,--build-id=none -Wl,--gc-sections"
+local Arm9LdFlags =
+	"-T Arm9.ld -nostdlib -nostartfiles -Wl,--fatal-warnings,--no-warn-rwx-segments,--build-id=none -Wl,--gc-sections"
 
 local Arm11Arch = "-mcpu=mpcore -march=armv6k -marm"
 local Arm11CFlags = Arm11Arch
@@ -27,7 +28,7 @@ local Arm11CFlags = Arm11Arch
 	.. " -nostdlib -nostartfiles -Wall -Wextra -g -O2 -I"
 	.. IncludeFolder
 local Arm11AsFlags = Arm11Arch .. " -mthumb-interwork"
-local Arm11LdFlags = "-T Arm11.ld -nostdlib -nostartfiles -Wl,--build-id=none"
+local Arm11LdFlags = "-T Arm11.ld -nostdlib -nostartfiles -Wl,--fatal-warnings,--no-warn-rwx-segments,--build-id=none"
 
 local Arm9LoadAddr = "0x08006800"
 local Arm9Entry = "0x08006800"
@@ -54,10 +55,10 @@ local function Quote(Value)
 end
 
 local function Run(Command)
-	print("+ " .. Command)
+	print(Command)
 	local Result = os.execute(Command)
 	if Result ~= true and Result ~= 0 then
-		error("Command failed: " .. Command, 0)
+		error("Command returned non-zero status")
 	end
 end
 
@@ -91,30 +92,30 @@ local function CompileLunix()
 
 	for _, Source in ipairs(Arm9SSources) do
 		local Name = Source:match("([^/]+)%.s$")
-		local Object = BuildFolder .. "/arm9_" .. Name .. ".o"
+		local Object = BuildFolder .. "/Arm9" .. Name .. ".o"
 		Assemble(Source, Object, Arm9AsFlags)
 		table.insert(Arm9Objects, Object)
 	end
 
 	for _, Source in ipairs(Arm9CSources) do
 		local Name = Source:match("([^/]+)%.c$")
-		local Object = BuildFolder .. "/arm9_" .. Name .. ".o"
+		local Object = BuildFolder .. "/Arm9" .. Name .. ".o"
 		CompileC(Source, Object, Arm9CFlags)
 		table.insert(Arm9Objects, Object)
 	end
 
 	for _, Source in ipairs(Arm11SSources) do
 		local Name = Source:match("([^/]+)%.s$")
-		local Object = BuildFolder .. "/arm11_" .. Name .. ".o"
+		local Object = BuildFolder .. "/Arm11" .. Name .. ".o"
 		Assemble(Source, Object, Arm11AsFlags)
 		table.insert(Arm11Objects, Object)
 	end
 
-	Link(Arm9LdFlags, Arm9Objects, BuildFolder .. "/arm9.elf")
-	ToBinary(BuildFolder .. "/arm9.elf", BuildFolder .. "/arm9.bin")
+	Link(Arm9LdFlags, Arm9Objects, BuildFolder .. "/Arm9.elf")
+	ToBinary(BuildFolder .. "/Arm9.elf", BuildFolder .. "/Arm9.bin")
 
-	Link(Arm11LdFlags, Arm11Objects, BuildFolder .. "/arm11.elf")
-	ToBinary(BuildFolder .. "/arm11.elf", BuildFolder .. "/arm11.bin")
+	Link(Arm11LdFlags, Arm11Objects, BuildFolder .. "/Arm11.elf")
+	ToBinary(BuildFolder .. "/Arm11.elf", BuildFolder .. "/Arm11.bin")
 
 	local FirmTool = "firmtool"
 
@@ -128,9 +129,9 @@ local function CompileLunix()
 			.. " -e "
 			.. Arm11Entry
 			.. " -D "
-			.. Quote(BuildFolder .. "/arm9.bin")
+			.. Quote(BuildFolder .. "/Arm9.bin")
 			.. " "
-			.. Quote(BuildFolder .. "/arm11.bin")
+			.. Quote(BuildFolder .. "/Arm11.bin")
 			.. " -A "
 			.. Arm9LoadAddr
 			.. " "
