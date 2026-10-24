@@ -1,7 +1,2 @@
-.cache
-.vscode
-compile_commands.json
-compile_commands.tmp
-build
-examples/*
-!examples/*.c
+Build
+Output
