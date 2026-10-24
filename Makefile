@@ -16,11 +16,18 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing header files
 # SPECS is the directory containing the important build and link files
 #---------------------------------------------------------------------------------
+
 export TARGET	:=	Lunix
 BUILD		:=	build
-SOURCES		:=	source source/common source/fs source/crypto source/fatfs source/nand source/safety source/utils source/kernel
 DATA		:=	data
-INCLUDES	:=	source source/common source/font source/fs source/crypto source/fatfs source/nand source/safety source/utils source/kernel
+
+SOURCES		:=	Source Source/Arm9 Source/Arm11 \
+	Source/Common Source/Crypto Source/FatFs \
+	Source/Nand Source/Safety Source/Arm9/Drivers
+
+INCLUDES		:=	Include Include/Arm9 Include/Arm11 \
+	Include/Common Include/Crypto Include/FatFs \
+	Include/Nand Include/Safety Include/Arm9/Drivers
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -54,7 +61,7 @@ endif
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
 ASFLAGS	:=	-g -mcpu=arm946e-s $(ARCH)
-LDFLAGS	=	-T../link.ld -nostartfiles -g $(ARCH) -Wl,-Map,$(TARGET).map
+LDFLAGS	=	-T../Arm9.ld -nostartfiles -g $(ARCH) -Wl,-Map,$(TARGET).map
 
 LIBS	:=
 

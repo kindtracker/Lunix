@@ -1,12 +1,12 @@
 .section .text.start
-.global _start
+.global Start
 .align 4
 .arm
 
 @ if the binary is booted from Brahma/CakeHax/k9lh
 @ the entrypoint is <start + 0x0>
 @ framebuffers are already set
-_start:
+Start:
     nop
     nop
     nop
@@ -39,7 +39,7 @@ _start_gw:
 
 
     @ copy the payload to the standard entrypoint (0x23F00000)
-    adr r0, _start
+    adr r0, Start
     add r1, r0, #0x100000
     ldr r2, .entry
     .copy_binary_fcram:
@@ -182,6 +182,6 @@ _skip_gw:
 
     mov r0, r9
     mov r1, r10
-    b main
+    b Main
 
 .pool
