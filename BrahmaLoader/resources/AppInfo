@@ -1,0 +1,6 @@
+APP_TITLE = hello_firmware_template_3ds
+APP_DESCRIPTION = A template to make firmwares for 3DS. This is based on SafeB9SInstaller and some functions and files are from Luma3DS.
+APP_AUTHOR = kindtracker
+
+PAYLOAD_MEM = 1
+VOODOO = 0x3F
