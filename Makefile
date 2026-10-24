@@ -23,7 +23,8 @@ DATA		:=	data
 
 SOURCES		:=	Source Source/Arm9 Source/Arm11 \
 	Source/Common Source/Crypto Source/FatFs \
-	Source/Nand Source/Safety Source/Arm9/Drivers
+	Source/Nand Source/Safety Source/Arm9/Drivers \
+	Source/Arm9/Shell
 
 INCLUDES		:=	Include Include/Arm9 Include/Arm11 \
 	Include/Common Include/Crypto Include/FatFs \
