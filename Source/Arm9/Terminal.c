@@ -130,23 +130,53 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
 
 void TerminalUpdate(TerminalType *Terminal) {
   int HidState = HidGetPressed();
-  int NewX = Terminal->SelectedX;
-  int NewY = Terminal->SelectedY;
+  int DeltaX = 0;
+  int DeltaY = 0;
 
   if (HidState & KEY_UP) {
-    NewY--;
+    DeltaY = -1;
   } else if (HidState & KEY_DOWN) {
-    NewY++;
+    DeltaY = 1;
   } else if (HidState & KEY_LEFT) {
-    NewX--;
+    DeltaX = -1;
   } else if (HidState & KEY_RIGHT) {
-    NewX++;
+    DeltaX = 1;
   } else {
     return;
   }
 
-  for (unsigned int Idx = 0;
-       Idx < sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]); Idx++) {
+  const KeyboardKey *CurrentKey = NULL;
+
+  unsigned int KeyCount =
+      sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]);
+
+  for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
+    const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
+
+    if (Terminal->SelectedX == Key->X && Terminal->SelectedY == Key->Y) {
+      CurrentKey = Key;
+      break;
+    }
+  }
+
+  if (CurrentKey == NULL) {
+    return;
+  }
+
+  int NewX = Terminal->SelectedX;
+  int NewY = Terminal->SelectedY;
+
+  if (DeltaX < 0) {
+    NewX = CurrentKey->X - 1;
+  } else if (DeltaX > 0) {
+    NewX = CurrentKey->X + CurrentKey->Width;
+  } else if (DeltaY < 0) {
+    NewY = CurrentKey->Y - 1;
+  } else {
+    NewY = CurrentKey->Y + CurrentKey->Height;
+  }
+
+  for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
     const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
 
     if (NewX >= Key->X && NewX < Key->X + Key->Width && NewY >= Key->Y &&
