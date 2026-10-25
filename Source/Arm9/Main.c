@@ -1,5 +1,6 @@
 #include "Arm9/Common.h"
 #include "Arm9/Ui.h"
+#include "Drivers/Hid.h"
 #include "Drivers/Mcu.h"
 #include "Shell/Shell.h"
 #include "Terminal.h"
@@ -24,7 +25,10 @@ void Main(int argc, char **argv) {
 
   int FrameCount = 0;
   while (true) {
-    if (!McuGetShellState()) {
+    HidUpdate();
+
+    int Keys = HidGetPressed();
+    if (!McuGetShellState() || Keys & KEY_A) {
       break;
     }
 

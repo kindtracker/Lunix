@@ -1,6 +1,7 @@
 #include "Arm9/Ui.h"
 #include "Arm9/Common.h"
 #include "Font/Font.h"
+#include <stdio.h>
 
 #define STRBUF_SIZE 512
 
