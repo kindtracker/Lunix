@@ -2,6 +2,7 @@
 #include "Arm9/Common.h"
 #include "Arm9/Ui.h"
 #include "Drivers/Hid.h"
+#include "MemoryManagement/Malloc.h"
 
 /*const char *KeyboardAbc[4] = {"1234567890", "qwertyuiop", "asdfghjkl-",
                               "zxcvbnm,./"};
@@ -146,6 +147,13 @@ static const KeyboardKey KeyboardSymbolLayout[] = {
 KeyboardKey *SelectedKey;
 
 void PutChar(TerminalType *Terminal, char Character) {
+  if (Terminal->Length >= Terminal->BufferLength) {
+    int NewBufferLength = Terminal->BufferLength * 2;
+    char *NewBuffer = Realloc(Terminal->Buffer, NewBufferLength);
+    Terminal->Buffer = NewBuffer;
+    Terminal->BufferLength = NewBufferLength;
+  }
+
   Terminal->Buffer[Terminal->Length++] = Character;
 }
 
@@ -156,27 +164,56 @@ void Puts(TerminalType *Terminal, const char *String) {
 }
 
 void TerminalDraw(TerminalType *Terminal, int FrameCount) {
-  int X = 6;
-  int Y = 6;
+  int X = 4;
+  int Y = 4;
+  int PositionStackX[Terminal->Length + 1];
+  int PositionStackY[Terminal->Length + 1];
+  int StackTop = 0;
+
+  PositionStackX[0] = X;
+  PositionStackY[0] = Y;
 
   for (int Idx = 0; Idx < Terminal->Length; Idx++) {
     char Character = Terminal->Buffer[Idx];
 
     if (Character == '\n') {
-      X = 6;
+      X = 4;
       Y += FONT_HEIGHT;
+      StackTop++;
+
+      PositionStackX[StackTop] = X;
+      PositionStackY[StackTop] = Y;
       continue;
+    }
+
+    if (Character == '\b') {
+      if (StackTop > 0) {
+        StackTop--;
+        X = PositionStackX[StackTop];
+        Y = PositionStackY[StackTop];
+
+        DrawRectangle(TopScreen, X, Y, FONT_WIDTH, FONT_HEIGHT, COLOR_CAT_BASE);
+      }
+      continue;
+    }
+
+    if (X + FONT_WIDTH > SCREEN_WIDTH_TOP) {
+      X = 4;
+      Y += FONT_HEIGHT;
     }
 
     DrawCharacter(TopScreen, (unsigned char)Character, X, Y, COLOR_CAT_TEXT,
                   COLOR_CAT_BASE, 1);
 
     X += FONT_WIDTH;
+    StackTop++;
+
+    PositionStackX[StackTop] = X;
+    PositionStackY[StackTop] = Y;
   }
 
-  int Color = (FrameCount % 512 > 256) ? COLOR_CAT_TEXT : COLOR_TRANSPARENT;
+  int Color = (FrameCount % 512 < 256) ? COLOR_CAT_TEXT : COLOR_TRANSPARENT;
 
-  X += FONT_WIDTH;
   DrawRectangle(TopScreen, X, Y, FONT_WIDTH, FONT_HEIGHT, Color);
 }
 
@@ -302,7 +339,7 @@ void TerminalUpdate(TerminalType *Terminal) {
     return;
   }
 
-  if (HidState & KEY_A) {
+  if (HidState & KEY_X) {
     if (SelectedKey == NULL)
       return;
 
@@ -317,15 +354,16 @@ void TerminalUpdate(TerminalType *Terminal) {
     } else if (KeyCode == KEY_TAB) {
       PutChar(Terminal, '\t');
     } else if (KeyCode == KEY_DELETE) {
-      if (Terminal->Length > 0) {
-        Terminal->Buffer[--Terminal->Length] = '\0';
-        Terminal->Buffer[Terminal->Length] = '\0';
-      }
+      Puts(Terminal, "\b \b");
     } else {
       PutChar(Terminal, (char)KeyCode);
 
       if (Terminal->Shift)
         Terminal->Shift = false;
     }
+  } else if (HidState & KEY_A) {
+    PutChar(Terminal, '\n');
+  } else if (HidState & KEY_B) {
+    Puts(Terminal, "\b \b");
   }
 }

@@ -2,6 +2,7 @@
 #include "Arm9/Ui.h"
 #include "Drivers/Hid.h"
 #include "Drivers/Mcu.h"
+#include "MemoryManagement/Malloc.h"
 #include "Shell/Shell.h"
 #include "Terminal.h"
 
@@ -19,7 +20,16 @@ void Main(int argc, char **argv) {
 
   ClearAllScreen();
 
-  TerminalType Terminal = {"", 0, TopScreen, 0, 0, false, false};
+  char *Buffer = Malloc(256);
+
+  TerminalType Terminal = {.Buffer = Buffer,
+                           .BufferLength = 256,
+                           .Length = 0,
+                           .Screen = TopScreen,
+                           .SelectedX = 0,
+                           .SelectedY = 0,
+                           .Shift = false,
+                           .Symbol = false};
   Puts(&Terminal, "Lunix v0.0.1\n");
   ShellPrompt(&Terminal);
 

@@ -3,6 +3,7 @@
 
 typedef struct {
   char *Buffer;
+  int BufferLength;
   int Length;
   uint8_t *Screen;
   int SelectedX;
