@@ -7,6 +7,8 @@ typedef struct {
   uint8_t *Screen;
   int SelectedX;
   int SelectedY;
+  bool Shift;
+  bool Symbol;
 } TerminalType;
 
 void PutChar(TerminalType *Terminal, char Character);

@@ -28,7 +28,6 @@ typedef enum {
   KEY_TAB,
   KEY_DELETE,
   KEY_SYMBOLS,
-  KEY_ENTER,
 } KeyCodeType;
 
 static const KeyboardKey KeyboardAbcLayout[] = {
@@ -58,8 +57,70 @@ static const KeyboardKey KeyboardAbcLayout[] = {
 
     {"Shift", 0, 4, 2, 1, KEY_SHIFT}, {"?123", 2, 4, 2, 1, KEY_SYMBOLS},
     {"Tab", 4, 4, 1, 1, KEY_TAB},     {"Space", 5, 4, 3, 1, ' '},
-    {"Del", 8, 4, 1, 1, KEY_DELETE},  {"Enter", 9, 4, 2, 1, KEY_ENTER},
+    {"Del", 8, 4, 1, 1, KEY_DELETE},  {"Enter", 9, 4, 2, 1, '\n'},
 };
+
+static const KeyboardKey KeyboardAbcShiftLayout[] = {
+    {"1", 0, 0, 1, 1, '1'},           {"2", 1, 0, 1, 1, '2'},
+    {"3", 2, 0, 1, 1, '3'},           {"4", 3, 0, 1, 1, '4'},
+    {"5", 4, 0, 1, 1, '5'},           {"6", 5, 0, 1, 1, '6'},
+    {"7", 6, 0, 1, 1, '7'},           {"8", 7, 0, 1, 1, '8'},
+    {"9", 8, 0, 1, 1, '9'},           {"0", 9, 0, 1, 1, '0'},
+
+    {"Q", 0, 1, 1, 1, 'Q'},           {"W", 1, 1, 1, 1, 'W'},
+    {"E", 2, 1, 1, 1, 'E'},           {"R", 3, 1, 1, 1, 'R'},
+    {"T", 4, 1, 1, 1, 'T'},           {"Y", 5, 1, 1, 1, 'Y'},
+    {"U", 6, 1, 1, 1, 'U'},           {"I", 7, 1, 1, 1, 'I'},
+    {"O", 8, 1, 1, 1, 'O'},           {"P", 9, 1, 1, 1, 'P'},
+
+    {"A", 0, 2, 1, 1, 'A'},           {"S", 1, 2, 1, 1, 'S'},
+    {"D", 2, 2, 1, 1, 'D'},           {"F", 3, 2, 1, 1, 'F'},
+    {"G", 4, 2, 1, 1, 'G'},           {"H", 5, 2, 1, 1, 'H'},
+    {"J", 6, 2, 1, 1, 'J'},           {"K", 7, 2, 1, 1, 'K'},
+    {"L", 8, 2, 1, 1, 'L'},           {"_", 9, 2, 1, 1, '_'},
+
+    {"Z", 0, 3, 1, 1, 'Z'},           {"X", 1, 3, 1, 1, 'X'},
+    {"C", 2, 3, 1, 1, 'C'},           {"V", 3, 3, 1, 1, 'V'},
+    {"B", 4, 3, 1, 1, 'B'},           {"N", 5, 3, 1, 1, 'N'},
+    {"M", 6, 3, 1, 1, 'M'},           {"<", 7, 3, 1, 1, '<'},
+    {">", 8, 3, 1, 1, '>'},           {"?", 9, 3, 1, 1, '?'},
+
+    {"Shift", 0, 4, 2, 1, KEY_SHIFT}, {"?123", 2, 4, 2, 1, KEY_SYMBOLS},
+    {"Tab", 4, 4, 1, 1, KEY_TAB},     {"Space", 5, 4, 3, 1, ' '},
+    {"Del", 8, 4, 1, 1, KEY_DELETE},  {"Enter", 9, 4, 2, 1, '\n'},
+};
+
+static const KeyboardKey KeyboardSymbolLayout[] = {
+    {"1", 0, 0, 1, 1, '1'},           {"2", 1, 0, 1, 1, '2'},
+    {"3", 2, 0, 1, 1, '3'},           {"4", 3, 0, 1, 1, '4'},
+    {"5", 4, 0, 1, 1, '5'},           {"6", 5, 0, 1, 1, '6'},
+    {"7", 6, 0, 1, 1, '7'},           {"8", 7, 0, 1, 1, '8'},
+    {"9", 8, 0, 1, 1, '9'},           {"0", 9, 0, 1, 1, '0'},
+
+    {"!", 0, 1, 1, 1, '!'},           {"@", 1, 1, 1, 1, '@'},
+    {"#", 2, 1, 1, 1, '#'},           {"$", 3, 1, 1, 1, '$'},
+    {"%", 4, 1, 1, 1, '%'},           {"^", 5, 1, 1, 1, '^'},
+    {"&", 6, 1, 1, 1, '&'},           {"*", 7, 1, 1, 1, '*'},
+    {"(", 8, 1, 1, 1, '('},           {")", 9, 1, 1, 1, ')'},
+
+    {"~", 0, 2, 1, 1, '~'},           {"`", 1, 2, 1, 1, '`'},
+    {"|", 2, 2, 1, 1, '|'},           {"\\", 3, 2, 1, 1, '\\'},
+    {"<", 4, 2, 1, 1, '<'},           {">", 5, 2, 1, 1, '>'},
+    {"{", 6, 2, 1, 1, '{'},           {"}", 7, 2, 1, 1, '}'},
+    {"[", 8, 2, 1, 1, '['},           {"]", 9, 2, 1, 1, ']'},
+
+    {"+", 0, 3, 1, 1, '+'},           {"=", 1, 3, 1, 1, '='},
+    {"_", 2, 3, 1, 1, '_'},           {":", 3, 3, 1, 1, ':'},
+    {";", 4, 3, 1, 1, ';'},           {"\"", 5, 3, 1, 1, '"'},
+    {"'", 6, 3, 1, 1, '\''},          {",", 7, 3, 1, 1, ','},
+    {"?", 8, 3, 1, 1, '?'},           {"-", 9, 3, 1, 1, '-'},
+
+    {"ABC", 0, 4, 2, 1, KEY_SYMBOLS}, {"?123", 2, 4, 2, 1, KEY_SYMBOLS},
+    {"Tab", 4, 4, 1, 1, KEY_TAB},     {"Space", 5, 4, 3, 1, ' '},
+    {"Del", 8, 4, 1, 1, KEY_DELETE},  {"Enter", 9, 4, 2, 1, '\n'},
+};
+
+KeyboardKey *SelectedKey;
 
 void PutChar(TerminalType *Terminal, char Character) {
   Terminal->Buffer[Terminal->Length++] = Character;
@@ -100,9 +161,18 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
   int KeyWidth = SCREEN_WIDTH_BOTTOM / KEYBOARD_COLS;
   int KeyHeight = SCREEN_HEIGHT_BOTTOM / KEYBOARD_ROWS;
 
+  const KeyboardKey *ActiveLayout;
+  if (Terminal->Shift) {
+    ActiveLayout = KeyboardAbcShiftLayout;
+  } else if (Terminal->Symbol) {
+    ActiveLayout = KeyboardSymbolLayout;
+  } else {
+    ActiveLayout = KeyboardAbcLayout;
+  }
+
   for (unsigned int Idx = 0;
        Idx < sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]); Idx++) {
-    const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
+    const KeyboardKey *Key = &ActiveLayout[Idx];
 
     int X = Key->X * SCREEN_WIDTH_BOTTOM / KEYBOARD_COLS;
     int Y = Key->Y * SCREEN_HEIGHT_BOTTOM / KEYBOARD_ROWS;
@@ -113,6 +183,10 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
         Terminal->SelectedX == Key->X && Terminal->SelectedY == Key->Y;
     int BackgroundColor =
         IsKeySelected ? COLOR_CAT_SURFACE1 : COLOR_CAT_SURFACE0;
+
+    if (IsKeySelected) {
+      SelectedKey = Key;
+    }
 
     DrawRectangle(BottomScreen, X + KEYBOARD_BORDER_SIZE,
                   Y + KEYBOARD_BORDER_SIZE, Width - KEYBOARD_BORDER_SIZE * 2,
@@ -130,6 +204,19 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
 
 void TerminalUpdate(TerminalType *Terminal) {
   int HidState = HidGetPressed();
+
+  const KeyboardKey *ActiveLayout;
+  unsigned int KeyCount =
+      sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]);
+
+  if (Terminal->Shift) {
+    ActiveLayout = KeyboardAbcShiftLayout;
+  } else if (Terminal->Symbol) {
+    ActiveLayout = KeyboardSymbolLayout;
+  } else {
+    ActiveLayout = KeyboardAbcLayout;
+  }
+
   int DeltaX = 0;
   int DeltaY = 0;
 
@@ -141,49 +228,79 @@ void TerminalUpdate(TerminalType *Terminal) {
     DeltaX = -1;
   } else if (HidState & KEY_RIGHT) {
     DeltaX = 1;
-  } else {
-    return;
   }
 
-  const KeyboardKey *CurrentKey = NULL;
+  if (DeltaX || DeltaY) {
+    const KeyboardKey *CurrentKey = NULL;
 
-  unsigned int KeyCount =
-      sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]);
+    for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
+      const KeyboardKey *Key = &ActiveLayout[Idx];
 
-  for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
-    const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
-
-    if (Terminal->SelectedX == Key->X && Terminal->SelectedY == Key->Y) {
-      CurrentKey = Key;
-      break;
+      if (Terminal->SelectedX == Key->X && Terminal->SelectedY == Key->Y) {
+        CurrentKey = Key;
+        break;
+      }
     }
-  }
 
-  if (CurrentKey == NULL) {
+    if (CurrentKey == NULL)
+      return;
+
+    int StartX = CurrentKey->X;
+    int StartY = CurrentKey->Y;
+
+    if (DeltaX < 0)
+      StartX = CurrentKey->X - 1;
+    else if (DeltaX > 0)
+      StartX = CurrentKey->X + CurrentKey->Width;
+    else if (DeltaY < 0)
+      StartY = CurrentKey->Y - 1;
+    else
+      StartY = CurrentKey->Y + CurrentKey->Height;
+
+    for (int Step = 0; Step < KEYBOARD_COLS * KEYBOARD_ROWS; Step++) {
+      int X = StartX + DeltaX * Step;
+      int Y = StartY + DeltaY * Step;
+
+      if (X < 0 || X >= KEYBOARD_COLS || Y < 0 || Y >= KEYBOARD_ROWS)
+        break;
+
+      for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
+        const KeyboardKey *Key = &ActiveLayout[Idx];
+
+        if (X >= Key->X && X < Key->X + Key->Width && Y >= Key->Y &&
+            Y < Key->Y + Key->Height) {
+          Terminal->SelectedX = Key->X;
+          Terminal->SelectedY = Key->Y;
+          return;
+        }
+      }
+    }
+
     return;
   }
 
-  int NewX = Terminal->SelectedX;
-  int NewY = Terminal->SelectedY;
-
-  if (DeltaX < 0) {
-    NewX = CurrentKey->X - 1;
-  } else if (DeltaX > 0) {
-    NewX = CurrentKey->X + CurrentKey->Width;
-  } else if (DeltaY < 0) {
-    NewY = CurrentKey->Y - 1;
-  } else {
-    NewY = CurrentKey->Y + CurrentKey->Height;
-  }
-
-  for (unsigned int Idx = 0; Idx < KeyCount; Idx++) {
-    const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
-
-    if (NewX >= Key->X && NewX < Key->X + Key->Width && NewY >= Key->Y &&
-        NewY < Key->Y + Key->Height) {
-      Terminal->SelectedX = Key->X;
-      Terminal->SelectedY = Key->Y;
+  if (HidState & KEY_A) {
+    if (SelectedKey == NULL)
       return;
+
+    int KeyCode = SelectedKey->KeyCode;
+
+    if (KeyCode == KEY_SHIFT) {
+      if (!Terminal->Symbol)
+        Terminal->Shift = !Terminal->Shift;
+    } else if (KeyCode == KEY_SYMBOLS) {
+      Terminal->Shift = false;
+      Terminal->Symbol = !Terminal->Symbol;
+    } else if (KeyCode == KEY_TAB) {
+      PutChar(Terminal, '\t');
+    } else if (KeyCode == KEY_DELETE) {
+      if (Terminal->Length > 0)
+        Terminal->Buffer[--Terminal->Length] = '\0';
+    } else {
+      PutChar(Terminal, (char)KeyCode);
+
+      if (Terminal->Shift)
+        Terminal->Shift = false;
     }
   }
 }

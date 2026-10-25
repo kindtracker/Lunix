@@ -19,7 +19,7 @@ void Main(int argc, char **argv) {
 
   ClearAllScreen();
 
-  TerminalType Terminal = {"", 0, TopScreen, 0, 0};
+  TerminalType Terminal = {"", 0, TopScreen, 0, 0, false, false};
   Puts(&Terminal, "Lunix v0.0.1\n");
   ShellPrompt(&Terminal);
 
@@ -28,7 +28,7 @@ void Main(int argc, char **argv) {
     HidUpdate();
 
     int Keys = HidGetPressed();
-    if (!McuGetShellState() || Keys & KEY_A) {
+    if (!McuGetShellState() || Keys & KEY_L) {
       break;
     }
 
