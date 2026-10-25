@@ -1,6 +1,7 @@
 #include "Terminal.h"
 #include "Arm9/Common.h"
 #include "Arm9/Ui.h"
+#include "Drivers/Hid.h"
 
 /*const char *KeyboardAbc[4] = {"1234567890", "qwertyuiop", "asdfghjkl-",
                               "zxcvbnm,./"};
@@ -108,9 +109,14 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
     int Width = Key->Width * SCREEN_WIDTH_BOTTOM / KEYBOARD_COLS;
     int Height = Key->Height * SCREEN_HEIGHT_BOTTOM / KEYBOARD_ROWS;
 
+    int IsKeySelected =
+        Terminal->SelectedX == Key->X && Terminal->SelectedY == Key->Y;
+    int BackgroundColor =
+        IsKeySelected ? COLOR_CAT_SURFACE1 : COLOR_CAT_SURFACE0;
+
     DrawRectangle(BottomScreen, X + KEYBOARD_BORDER_SIZE,
                   Y + KEYBOARD_BORDER_SIZE, Width - KEYBOARD_BORDER_SIZE * 2,
-                  Height - KEYBOARD_BORDER_SIZE * 2, COLOR_CAT_SURFACE0);
+                  Height - KEYBOARD_BORDER_SIZE * 2, BackgroundColor);
 
     int TextWidth = strlen(Key->Label) * FONT_WIDTH;
     int TextHeight = FONT_HEIGHT;
@@ -119,5 +125,35 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
 
     DrawString(BottomScreen, Key->Label, TextX, TextY, COLOR_CAT_TEXT,
                COLOR_TRANSPARENT, 1);
+  }
+}
+
+void TerminalUpdate(TerminalType *Terminal) {
+  int HidState = HidGetPressed();
+  int NewX = Terminal->SelectedX;
+  int NewY = Terminal->SelectedY;
+
+  if (HidState & KEY_UP) {
+    NewY--;
+  } else if (HidState & KEY_DOWN) {
+    NewY++;
+  } else if (HidState & KEY_LEFT) {
+    NewX--;
+  } else if (HidState & KEY_RIGHT) {
+    NewX++;
+  } else {
+    return;
+  }
+
+  for (unsigned int Idx = 0;
+       Idx < sizeof(KeyboardAbcLayout) / sizeof(KeyboardAbcLayout[0]); Idx++) {
+    const KeyboardKey *Key = &KeyboardAbcLayout[Idx];
+
+    if (NewX >= Key->X && NewX < Key->X + Key->Width && NewY >= Key->Y &&
+        NewY < Key->Y + Key->Height) {
+      Terminal->SelectedX = Key->X;
+      Terminal->SelectedY = Key->Y;
+      return;
+    }
   }
 }

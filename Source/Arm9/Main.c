@@ -19,7 +19,7 @@ void Main(int argc, char **argv) {
 
   ClearAllScreen();
 
-  TerminalType Terminal = {"", 0, TopScreen};
+  TerminalType Terminal = {"", 0, TopScreen, 0, 0};
   Puts(&Terminal, "Lunix v0.0.1\n");
   ShellPrompt(&Terminal);
 
@@ -32,6 +32,7 @@ void Main(int argc, char **argv) {
       break;
     }
 
+    TerminalUpdate(&Terminal);
     TerminalDraw(&Terminal, FrameCount);
     TerminalKeyboardDraw(&Terminal);
 
