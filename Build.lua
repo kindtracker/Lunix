@@ -15,6 +15,7 @@ local Sources = {
 	"Source/Safety",
 	"Source/Arm9/Drivers",
 	"Source/Arm9/Shell",
+	"Source/Arm9/MemoryManagement",
 }
 
 local Includes = {
@@ -27,6 +28,7 @@ local Includes = {
 	"Include/Nand",
 	"Include/Safety",
 	"Include/Arm9/Drivers",
+	"Include/Arm9/MemoryManagement",
 }
 
 local DevkitArm = os.getenv("DEVKITARM")
