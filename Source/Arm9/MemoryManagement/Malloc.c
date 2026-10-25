@@ -1,9 +1,6 @@
 #include "MemoryManagement/Malloc.h"
 #include "Arm9/Common.h"
 
-#define TOTAL_PAGES ((MEMORY_END - MEMORY_START) / PAGE_SIZE)
-#define BITMAP_SIZE ((TOTAL_PAGES + 7) / 8)
-
 static uint8_t Bitmap[BITMAP_SIZE];
 
 void MallocInitialize(void) { memset(Bitmap, 0, sizeof(Bitmap)); }

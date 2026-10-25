@@ -4,7 +4,7 @@ ENTRY(Start)
 
 SECTIONS
 {
-    . = 0x23F00000;
+    . = 0x08006800;
 
     .text.start : ALIGN(4) { *(.text.start) }
     .text       : ALIGN(4) { *(.text*) }
@@ -18,7 +18,9 @@ SECTIONS
     }
 
     . = ALIGN(4096);
-    KernelEnd = .;
+
+    MemoryStart = 0x20006800;
+    MemoryEnd = 0x28000000;
 
     __end__ = ABSOLUTE(.);
 }

@@ -444,11 +444,11 @@ local function BuildFirm()
 	Run(
 		"firmtool build "
 			.. Quote(Output .. ".firm")
-			.. " -n 0x23F00000"
+			.. " -n 0x08006800"
 			.. " -e 0"
 			.. " -D "
 			.. Quote(Output .. ".bin")
-			.. " -A 0x23F00000"
+			.. " -A 0x08006800"
 			.. " -C NDMA -i"
 	)
 end

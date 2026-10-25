@@ -7,10 +7,10 @@
 	.arm
 	.section .text.memcpy, "ax", %progbits
 	.align  2
-	.global memcpy
+	.global Memcpy
 	.syntax unified
 	.type   memcpy, %function
-memcpy:
+Memcpy:
 	@ r0 = dest
 	@ r1 = src
 	@ r2 = length
@@ -69,4 +69,4 @@ memcpy:
 	strb    r3, [r0], #1
 	subs    r2, r2, #1
 	b       .L5
-	.size   memcpy, .-memcpy
+	.size   Memcpy, .-Memcpy
