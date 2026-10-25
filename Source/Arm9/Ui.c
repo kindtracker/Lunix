@@ -10,6 +10,10 @@ void DrawPixel(uint8_t *Screen, int X, int Y, int Color) {
     return;
   }
 
+  if (Color == COLOR_TRANSPARENT) {
+    return;
+  }
+
   int Width = (Screen == TopScreen) ? SCREEN_WIDTH_TOP : SCREEN_WIDTH_BOTTOM;
 
   if (X < 0 || X >= Width || Y < 0 || Y >= SCREEN_HEIGHT) {
@@ -35,7 +39,7 @@ void ClearScreen(uint8_t *Screen) {
 
   for (int X = 0; X < Width; X++) {
     for (int Y = 0; Y < SCREEN_HEIGHT; Y++) {
-      DrawPixel(Screen, X, Y, COLOR_BLACK);
+      DrawPixel(Screen, X, Y, COLOR_CAT_BASE);
     }
   }
 }

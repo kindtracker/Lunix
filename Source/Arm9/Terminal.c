@@ -13,6 +13,7 @@ const char *KeyboardSymbol[4] = {"1234567890", "!@#$%^&*()", "~`|\\<>{}[]",
 
 #define KEYBOARD_COLS 9
 #define KEYBOARD_ROWS 5
+#define KEYBOARD_BORDER_SIZE 3
 
 typedef struct {
   const char *Label;
@@ -82,13 +83,13 @@ void TerminalDraw(TerminalType *Terminal, int FrameCount) {
       continue;
     }
 
-    DrawCharacter(TopScreen, (unsigned char)Character, X, Y, COLOR_WHITE,
-                  COLOR_BLACK, 1);
+    DrawCharacter(TopScreen, (unsigned char)Character, X, Y, COLOR_CAT_TEXT,
+                  COLOR_CAT_BASE, 1);
 
     X += FONT_WIDTH;
   }
 
-  int Color = (FrameCount % 512 > 256) ? COLOR_WHITE : COLOR_BLACK;
+  int Color = (FrameCount % 512 > 256) ? COLOR_CAT_TEXT : COLOR_TRANSPARENT;
 
   X += FONT_WIDTH;
   DrawRectangle(TopScreen, X, Y, FONT_WIDTH, FONT_HEIGHT, Color);
@@ -107,14 +108,16 @@ void TerminalKeyboardDraw(TerminalType *Terminal) {
     int Width = Key->Width * SCREEN_WIDTH_BOTTOM / KEYBOARD_COLS;
     int Height = Key->Height * SCREEN_HEIGHT_BOTTOM / KEYBOARD_ROWS;
 
-    DrawRectangle(BottomScreen, X, Y, Width, Height, COLOR_BLACK);
+    DrawRectangle(BottomScreen, X + KEYBOARD_BORDER_SIZE,
+                  Y + KEYBOARD_BORDER_SIZE, Width - KEYBOARD_BORDER_SIZE * 2,
+                  Height - KEYBOARD_BORDER_SIZE * 2, COLOR_CAT_SURFACE0);
 
     int TextWidth = strlen(Key->Label) * FONT_WIDTH;
     int TextHeight = FONT_HEIGHT;
     int TextX = X + (Width - TextWidth) / 2;
     int TextY = Y + (Height - TextHeight) / 2;
 
-    DrawString(BottomScreen, Key->Label, TextX, TextY, COLOR_WHITE, COLOR_BLACK,
-               1);
+    DrawString(BottomScreen, Key->Label, TextX, TextY, COLOR_CAT_TEXT,
+               COLOR_TRANSPARENT, 1);
   }
 }
