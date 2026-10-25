@@ -33,6 +33,7 @@ void Main(int argc, char **argv) {
     }
 
     TerminalDraw(&Terminal, FrameCount);
+    TerminalKeyboardDraw(&Terminal);
 
     FrameCount++;
   }
