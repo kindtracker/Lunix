@@ -14,6 +14,8 @@ typedef struct {
 
 void PutChar(TerminalType *Terminal, char Character);
 void Puts(TerminalType *Terminal, const char *str);
+void Printf(TerminalType *Terminal, const char *Format, ...);
+
 void TerminalUpdate(TerminalType *Terminal);
 void TerminalDraw(TerminalType *Terminal, int FrameCount);
 void TerminalKeyboardDraw(TerminalType *Terminal);

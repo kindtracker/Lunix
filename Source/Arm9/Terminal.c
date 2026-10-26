@@ -3,6 +3,7 @@
 #include "Arm9/Ui.h"
 #include "Drivers/Hid.h"
 #include "MemoryManagement/Malloc.h"
+#include <stdio.h>
 
 /*const char *KeyboardAbc[4] = {"1234567890", "qwertyuiop", "asdfghjkl-",
                               "zxcvbnm,./"};
@@ -144,6 +145,9 @@ static const KeyboardKey KeyboardSymbolLayout[] = {
     {"Enter", 9, 4, 2, 1, '\n'},
 };
 
+int OldCursorX = 4;
+int OldCursorY = 4;
+
 KeyboardKey *SelectedKey;
 
 void PutChar(TerminalType *Terminal, char Character) {
@@ -155,12 +159,26 @@ void PutChar(TerminalType *Terminal, char Character) {
   }
 
   Terminal->Buffer[Terminal->Length++] = Character;
+
+  DrawRectangle(TopScreen, OldCursorX, OldCursorY, FONT_WIDTH, FONT_HEIGHT,
+                COLOR_CAT_BASE);
 }
 
 void Puts(TerminalType *Terminal, const char *String) {
   for (int Idx = 0; String[Idx] != '\0'; Idx++) {
     PutChar(Terminal, String[Idx]);
   }
+}
+
+void Printf(TerminalType *Terminal, const char *Format, ...) {
+  char String[STRING_BUFFER_SIZE];
+
+  va_list Args;
+  va_start(Args, Format);
+  vsnprintf(String, sizeof(String), Format, Args);
+  va_end(Args);
+
+  Puts(Terminal, String);
 }
 
 void TerminalDraw(TerminalType *Terminal, int FrameCount) {
@@ -212,9 +230,11 @@ void TerminalDraw(TerminalType *Terminal, int FrameCount) {
     PositionStackY[StackTop] = Y;
   }
 
-  int Color = (FrameCount % 512 < 256) ? COLOR_CAT_TEXT : COLOR_TRANSPARENT;
+  int Color = (FrameCount % 128 < 64) ? COLOR_CAT_TEXT : COLOR_TRANSPARENT;
 
   DrawRectangle(TopScreen, X, Y, FONT_WIDTH, FONT_HEIGHT, Color);
+  OldCursorX = X;
+  OldCursorY = Y;
 }
 
 void TerminalKeyboardDraw(TerminalType *Terminal) {

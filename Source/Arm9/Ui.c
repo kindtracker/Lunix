@@ -3,8 +3,6 @@
 #include "Font/Font.h"
 #include <stdio.h>
 
-#define STRBUF_SIZE 512
-
 void DrawPixel(uint8_t *Screen, int X, int Y, int Color) {
   if (Screen == NULL) {
     return;
@@ -124,7 +122,7 @@ void DrawStringF(uint8_t *Screen, int X, int Y, int FontColor,
     return;
   }
 
-  char String[STRBUF_SIZE];
+  char String[STRING_BUFFER_SIZE];
 
   va_list Va;
   va_start(Va, Format);

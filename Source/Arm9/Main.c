@@ -46,6 +46,8 @@ void Main(int argc, char **argv) {
     TerminalDraw(&Terminal, FrameCount);
     TerminalKeyboardDraw(&Terminal);
 
+    Printf(&Terminal, "\nLength: %d", Terminal.Length);
+
     FrameCount++;
   }
 

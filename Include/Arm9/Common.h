@@ -1,5 +1,7 @@
 #pragma once
 
+#define STRING_BUFFER_SIZE 512
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
