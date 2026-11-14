@@ -1,4 +1,5 @@
 #include <elf.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,56 +36,40 @@ void SupLoadProgram() {
       MaxAddress = End;
   }
 
-  uc_err Error =
-      uc_mem_map(Unicorn, MinAddress, MaxAddress - MinAddress, UC_PROT_ALL);
-
-  if (Error != UC_ERR_OK) {
-    fprintf(stderr, "[Lunix] failed to map elf segment: %s\n",
-            uc_strerror(Error));
-    free(Job->File);
-    return -1;
+  if (MinAddress == UINT64_MAX || MaxAddress <= MinAddress) {
+    Job->Result = NOT_OK;
+    return;
   }
 
+  uint64_t Size = MaxAddress - MinAddress;
+  if (Size > UINT32_MAX) {
+    Job->Result = NOT_OK;
+    return;
+  }
+
+  uint32_t PhysicalAddress = SupMalloc((uint32_t)Size);
+  if (!PhysicalAddress) {
+    Job->Result = NOT_OK;
+    return;
+  }
+
+  mmu_map(MinAddress, PhysicalAddress, (uint32_t)Size, MAP_USER);
   for (int Idx = 0; Idx < Eh->e_phnum; Idx++) {
     Elf64_Phdr *Ph = &Phdrs[Idx];
-
     if (Ph->p_type != PT_LOAD)
       continue;
 
-    Error = uc_mem_write(Unicorn, Ph->p_vaddr, Job->File + Ph->p_offset,
-                         Ph->p_filesz);
-
-    if (Error != UC_ERR_OK) {
-      fprintf(stderr, "[Lunix] failed to write elf segment: %s\n",
-              uc_strerror(Error));
-      free(Job->File);
-      return -1;
-    }
+    uint32_t SegmentPhysicalAddress =
+        PhysicalAddress + (uint32_t)(Ph->p_vaddr - MinAddress);
+    uint8_t *Segment = (uint8_t *)SegmentPhysicalAddress;
+    memcpy(Segment, Job->File + Ph->p_offset, Ph->p_filesz);
 
     if (Ph->p_memsz > Ph->p_filesz) {
-      uint8_t *Zero = calloc(1, Ph->p_memsz - Ph->p_filesz);
-
-      if (!Zero) {
-        free(Job->File);
-        return -1;
-      }
-
-      Error = uc_mem_write(Unicorn, Ph->p_vaddr + Ph->p_filesz, Zero,
-                           Ph->p_memsz - Ph->p_filesz);
-
-      free(Zero);
-
-      if (Error != UC_ERR_OK) {
-        fprintf(stderr, "[Lunix] failed to clear elf bss: %s\n",
-                uc_strerror(Error));
-        free(Job->File);
-        return -1;
-      }
+      memset(Segment + Ph->p_filesz, 0, Ph->p_memsz - Ph->p_filesz);
     }
   }
 
-  *Entry = Eh->e_entry;
-
-  free(Job->File);
-  return 0;
+  Job->Entry = Eh->e_entry;
+  Job->Result = OK;
+  return;
 }
