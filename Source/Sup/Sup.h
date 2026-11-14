@@ -4,9 +4,9 @@
 
 #define PAGE_SIZE 4096
 
-#define JOB_PARAMS 0x25100000u
-#define JOB_CODE 0x25101000u
-#define SUP_END 0x25300000u
+#define JOB_CODE 0x25100000u
+#define SUP_END 0x25200000u
+#define JOB_PARAMS 0x25200000u
 
 #define VA_CODE 0x00100000u
 #define VA_HEAP 0x08000000u
@@ -36,7 +36,7 @@ typedef struct {
 
 enum { OK, NOT_OK };
 
-enum { JOB_LOAD_ELF };
+enum { JOB_IDLE, JOB_LOAD_ELF };
 
 enum {
   MAP_USER = 1,
