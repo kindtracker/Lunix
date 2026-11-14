@@ -10,17 +10,17 @@ extern const uint8_t SupBlob[], SupBlobEnd[];
 int main() {
   const char *FileName = "/Meow.elf";
 
-  printf("App: Elf = %s\n", FileName);
+  printf("App: ELF = %s\n", FileName);
 
   printf("App: Loading Job Code\n");
   memcpy((void *)JOB_CODE, SupBlob, (size_t)(SupBlobEnd - SupBlob));
   memset(Job, 0, sizeof(JobParamsType));
   Job->Done = true;
 
-  printf("App: Loading Elf Content and passing it to Job\n");
+  printf("App: Loading ELF Content and passing it to Job\n");
   FILE *FilePtr = fopen(FileName, "rb");
   if (!FilePtr) {
-    printf("App: Failed to open Elf\n");
+    printf("App: Failed to open ELF\n");
     hid_wait(KEY_A);
     return 1;
   }
@@ -28,7 +28,7 @@ int main() {
   fseek(FilePtr, 0, SEEK_END);
   long FileSize = ftell(FilePtr);
   if (FileSize <= 0) {
-    printf("App: Invalid Elf size\n");
+    printf("App: Invalid ELF size\n");
     fclose(FilePtr);
     hid_wait(KEY_A);
     return 1;
@@ -38,7 +38,7 @@ int main() {
   size_t Size = (size_t)FileSize;
   char *FileContent = malloc(Size);
   if (!FileContent) {
-    printf("App: Failed to allocate Elf buffer\n");
+    printf("App: Failed to allocate ELF buffer\n");
     fclose(FilePtr);
     hid_wait(KEY_A);
     return 1;
@@ -48,16 +48,15 @@ int main() {
   fclose(FilePtr);
 
   if (BytesRead != Size) {
-    printf("App: Failed to read complete Elf\n");
+    printf("App: Failed to read complete ELF\n");
     free(FileContent);
     hid_wait(KEY_A);
     return 1;
   }
 
-  printf("Sup: Loading Elf\n");
-
-  Job->Command = JOB_LOAD_Elf;
-  Job->File = FileContent;
+  printf("Sup: Loading ELF\n");
+  Job->Command = JOB_LOAD_ELF;
+  Job->File = (uint32_t)FileContent;
 
   hid_wait(KEY_A);
 
