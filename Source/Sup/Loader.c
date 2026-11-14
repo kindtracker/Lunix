@@ -6,7 +6,7 @@
 
 #include "Sup.h"
 
-void SupLoadProgram() {
+void SupLoadProgram(void) {
   Elf32_Ehdr *Eh = (Elf32_Ehdr *)(u32)Job->File;
 
   if (memcmp(Eh->e_ident, ELFMAG, SELFMAG) != 0 ||

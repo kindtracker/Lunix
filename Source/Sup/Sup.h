@@ -36,6 +36,8 @@ typedef struct {
 
 enum { OK, NOT_OK };
 
+enum { JOB_LOAD_ELF };
+
 enum {
   MAP_USER = 1,
   MAP_PRIV = 2,
@@ -48,7 +50,7 @@ static JobParamsType *Job = (JobParamsType *)JOB_PARAMS;
 
 uint32_t SupMalloc(size_t Size);
 void SupFree(uint32_t Pointer);
-void SupLoadProgram();
+void SupLoadProgram(void);
 
 void *page_alloc(void);
 void page_free(void *p);
