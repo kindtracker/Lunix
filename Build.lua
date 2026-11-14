@@ -78,22 +78,38 @@ local function BuildSup()
 
 	Run(Command)
 
-	Run(Prefix .. "objcopy -O binary " .. Quote("Build/Sup.elf") .. " " .. Quote("Build/Sup.bin"))
+	Run(
+		Prefix
+			.. "objcopy -O binary "
+			.. "-j .text -j .data "
+			.. Quote("Build/Sup.elf")
+			.. " "
+			.. Quote("Build/Sup.bin")
+	)
+
+	local Blob = '.section .rodata.SupBlob, "a"\n'
+		.. ".balign 16\n"
+		.. ".global SupBlob\n"
+		.. ".global SupBlobEnd\n"
+		.. "SupBlob:\n"
+		.. '.incbin "Build/Sup.bin"\n'
+		.. "SupBlobEnd:\n"
+
+	local File = assert(io.open("Build/SupBlob.s", "w"))
+	File:write(Blob)
+	File:close()
 end
 
 local function BuildApp()
 	table.sort(App)
 
-	if #App == 0 then
-		error("No source files found for Application")
-	end
-
-	local Command = "python3 " .. Quote(AurCompiler) .. " build"
+	local Command = "python3 " .. Quote(AurCompiler) .. " build -ISource/Sup"
 
 	for _, Source in ipairs(App) do
 		Command = Command .. " " .. Quote(Source)
 	end
 
+	Command = Command .. " " .. Quote("Build/SupBlob.s")
 	Command = Command .. " -o " .. Quote("Lunix.bin")
 
 	Run(Command)
