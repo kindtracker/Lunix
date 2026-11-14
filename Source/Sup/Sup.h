@@ -1,4 +1,8 @@
 #pragma once
+#include <stddef.h>
+#include <stdint.h>
+
+#define PAGE_SIZE 4096
 
 #define JOB_PARAMS 0x25100000u
 #define JOB_CODE 0x25101000u
@@ -39,12 +43,15 @@ enum {
   MAP_UNCACHED = 8,
   MAP_RO = 16
 };
-#define MAP_ALL MAP
 
-static const JobParams *Job = (JobParamsType *)JOB_PARAMS;
+static JobParamsType *Job = (JobParamsType *)JOB_PARAMS;
 
+uint32_t SupMalloc(size_t Size);
+void SupFree(uint32_t Pointer);
 void SupLoadProgram();
 
+void *page_alloc(void);
+void page_free(void *p);
 void mmu_reset(void);
 bool mmu_map(u32 va, u32 pa, u32 size, u32 flags);
 void mmu_unmap(u32 va, u32 size);

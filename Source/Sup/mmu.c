@@ -1,6 +1,7 @@
 // https://github.com/Cracko298/NovaLauncher/blob/9814fcb4bdb228a8574daa3dfdaec784144a7c21/arm11/mmu.c
+#include <string.h>
 
-#include "sup.h"
+#include "Sup.h"
 
 #define L1_SECTION 0x2u
 #define L1_COARSE 0x1u

@@ -7,27 +7,27 @@
 #include "Sup.h"
 
 void SupLoadProgram() {
-  Elf64_Ehdr *Eh = (Elf64_Ehdr *)Job->File;
+  Elf32_Ehdr *Eh = (Elf32_Ehdr *)(u32)Job->File;
 
   if (memcmp(Eh->e_ident, ELFMAG, SELFMAG) != 0 ||
-      Eh->e_machine != EM_AARCH64) {
+      Eh->e_ident[EI_CLASS] != ELFCLASS32 || Eh->e_machine != EM_ARM) {
     Job->Result = NOT_OK;
     return;
   }
 
-  Elf64_Phdr *Phdrs = (Elf64_Phdr *)(Job->File + Eh->e_phoff);
+  Elf32_Phdr *Phdrs = (Elf32_Phdr *)((u32)Job->File + Eh->e_phoff);
 
-  uint64_t MinAddress = UINT64_MAX;
-  uint64_t MaxAddress = 0;
+  uint32_t MinAddress = UINT32_MAX;
+  uint32_t MaxAddress = 0;
 
   for (int Idx = 0; Idx < Eh->e_phnum; Idx++) {
-    Elf64_Phdr *Ph = &Phdrs[Idx];
+    Elf32_Phdr *Ph = &Phdrs[Idx];
 
     if (Ph->p_type != PT_LOAD)
       continue;
 
-    uint64_t Address = Ph->p_vaddr & ~0xfffULL;
-    uint64_t End = (Ph->p_vaddr + Ph->p_memsz + 0xfff) & ~0xfffULL;
+    uint32_t Address = Ph->p_vaddr & ~0xfff;
+    uint32_t End = (Ph->p_vaddr + Ph->p_memsz + 0xfff) & ~0xfff;
 
     if (MinAddress > Address)
       MinAddress = Address;
@@ -36,33 +36,33 @@ void SupLoadProgram() {
       MaxAddress = End;
   }
 
-  if (MinAddress == UINT64_MAX || MaxAddress <= MinAddress) {
+  if (MinAddress == UINT32_MAX || MaxAddress <= MinAddress) {
     Job->Result = NOT_OK;
     return;
   }
 
-  uint64_t Size = MaxAddress - MinAddress;
-  if (Size > UINT32_MAX) {
-    Job->Result = NOT_OK;
-    return;
-  }
+  uint32_t Size = MaxAddress - MinAddress;
 
-  uint32_t PhysicalAddress = SupMalloc((uint32_t)Size);
+  uint32_t PhysicalAddress = SupMalloc(Size);
   if (!PhysicalAddress) {
     Job->Result = NOT_OK;
     return;
   }
 
-  mmu_map(MinAddress, PhysicalAddress, (uint32_t)Size, MAP_USER);
+  mmu_map(MinAddress, PhysicalAddress, Size, MAP_USER);
+
   for (int Idx = 0; Idx < Eh->e_phnum; Idx++) {
-    Elf64_Phdr *Ph = &Phdrs[Idx];
+    Elf32_Phdr *Ph = &Phdrs[Idx];
+
     if (Ph->p_type != PT_LOAD)
       continue;
 
     uint32_t SegmentPhysicalAddress =
-        PhysicalAddress + (uint32_t)(Ph->p_vaddr - MinAddress);
+        PhysicalAddress + (Ph->p_vaddr - MinAddress);
+
     uint8_t *Segment = (uint8_t *)SegmentPhysicalAddress;
-    memcpy(Segment, Job->File + Ph->p_offset, Ph->p_filesz);
+
+    memcpy(Segment, (void *)(u32)(Job->File + Ph->p_offset), Ph->p_filesz);
 
     if (Ph->p_memsz > Ph->p_filesz) {
       memset(Segment + Ph->p_filesz, 0, Ph->p_memsz - Ph->p_filesz);
@@ -71,5 +71,4 @@ void SupLoadProgram() {
 
   Job->Entry = Eh->e_entry;
   Job->Result = OK;
-  return;
 }

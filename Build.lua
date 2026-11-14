@@ -40,10 +40,8 @@ local function FindSources(Folder, Output)
 
 			if Attributes.mode == "directory" then
 				FindSources(Path, Output)
-			elseif Attributes.mode == "file" then
-				if not Path:match("%.ld$") then
-					table.insert(Output, Path)
-				end
+			elseif Attributes.mode == "file" and (Path:match("%.c$") or Path:match("%.s$") or Path:match("%.S$")) then
+				table.insert(Output, Path)
 			end
 		end
 	end
@@ -56,7 +54,7 @@ local function BuildSup()
 	lfs.mkdir("Build/Sup")
 
 	for _, Source in ipairs(Sup) do
-		local Object = "Build/Sup/" .. Source:match("([^/]+)"):gsub("%.%w+$", ".o")
+		local Object = "Build/Sup/" .. Source:match("([^/]+)$"):gsub("%.%w+$", ".o")
 
 		local Command = Prefix
 			.. "gcc -c "
