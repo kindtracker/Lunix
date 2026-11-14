@@ -265,7 +265,5 @@ bool mmu_base(void) {
          (size_t)((const u8 *)vector_table_end - (const u8 *)vector_table));
   if (!mmu_map(VA_VECTORS, sup_pa(vec), 0x1000u, MAP_PRIV))
     return false;
-  if (!mmu_map(VA_IO, PA_IO, IO_SIZE, MAP_PRIV | MAP_DEVICE))
-    return false;
   return mmu_map(PA_MPCORE, PA_MPCORE, 0x100000u, MAP_PRIV | MAP_DEVICE);
 }

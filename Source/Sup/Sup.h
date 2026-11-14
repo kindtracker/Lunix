@@ -4,6 +4,15 @@
 #define JOB_CODE 0x25101000u
 #define SUP_END 0x25300000u
 
+#define VA_CODE 0x00100000u
+#define VA_HEAP 0x08000000u
+#define VA_STACK_TOP 0x10000000u
+#define VA_STACK 0x0FF00000u
+#define VA_MAP_BEGIN 0x10000000u
+#define VA_MAP_END 0x14000000u
+#define VA_VECTORS 0xFFFF0000u
+#define PA_MPCORE 0x17E00000u
+
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
